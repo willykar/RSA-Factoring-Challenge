@@ -1,21 +1,26 @@
-#/usr/bin/env python3
+#!/usr/bin/python3
 import sys
 
 
-def primef(m):
-    if m <= 3:
-        return int(m)
-    if m % 2 == 0:
-        return 2
-    elif m % 3 == 0:
-        return 3
-    else:
-        for a in range(5, int((m)**0.5) + 1, 6):
-            if m % a == 0:
-                return int(a)
-            if m % (a + 2) == 0:
-                return primef(m/(a+2))
-    return int(m)
+def factorize(num):
+    fact = 2
+    while (num % fact):
+        if (fact <= num):
+            fact += 1
+
+    factor2 = num // fact
+    return (factor2, fact)
 
 
-print(primef(int(sys.argv[1])))
+if len(sys.argv) != 2:
+    sys.exit(f"Wrong usage: {sys.argv[0]} <file_path>")
+
+filename = sys.argv[1]
+
+file = open(filename, 'r')
+lines = file.readlines()
+
+for line in lines:
+    num = int(line.rstrip())
+    factor2, fact = factorize(num)
+    print(f"{num} = {factor2} * {fact}")
