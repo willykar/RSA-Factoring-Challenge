@@ -1,27 +1,22 @@
 #!/usr/bin/python3
+#import pdb; pdb.set_trace()
+import math
 import sys
-
-
-def factorize(num):
-    """ Generate 2 factors for a given number"""
-    factor1 = 2
-    while (num % factor1):
-        if (factor1 <= num):
-            factor1 += 1
-
-    factor2 = num // factor1
-    return (factor2, factor1)
-
-
-if len(sys.argv) != 2:
-    sys.exit(f"Wrong usage: {sys.argv[0]} <file_path>")
 
 filename = sys.argv[1]
 
-file = open(filename, 'r')
-lines = file.readlines()
-
-for line in lines:
-    num = int(line.rstrip())
-    factor2, factor1 = factorize(num)
-    print(f"{num} = {factor2} * {factor1}")
+with open(filename, 'r', encoding='utf-8') as f:
+    a = f.read()
+    a_l = a.count("\n")
+lineas = 0
+b = 0
+with open(filename, 'r', encoding='utf-8') as f:
+    while lineas < a_l:
+        n1 = int (f.readline())
+        lineas += 1
+        a = 2
+        while a < n1//2:
+            if math.fmod(n1, a) == 0:
+                print ("{:d} = {:d} * {:d}".format(n1, a, int(n1/a), end=""))
+                a = n1
+            a += 1
