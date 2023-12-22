@@ -1,48 +1,61 @@
-#!/usr/bin/env bash
+#!/usr/bin/python3
 
-check_factor()
-{
-	if [ $# -ne 3 ];
-        then
-                args=("$@")
-                count=0
-                num2=1
-                for a in ${args[*]};
-                do
-                        if [ $count -gt 1 ];
-                        then
-                                num2=$(echo $a*$num2 | bc)
-                        fi
-                        count=$((count + 1))
-                done
-        else
-                num2=$3
-        fi
+import time
+import math
+import sys
 
-        num1=$2
-        num=$(echo "$1" | tr ':' '=')
+def pollard_rho(n):
+    if n % 2 == 0:
+        return 2
+    
+    x = 2
+    y = 2
+    d = 1
+    
+    f = lambda x: (x**2 + 1) % n
+    
+    while d == 1:
+        x = f(x)
+        y = f(f(y))
+        d = math.gcd(abs(x - y), n)
+    
+    return d
 
-        result=$(echo "if($num2 > $num1) 1 else 0" | bc)
-	        if ((result == 1)); then
-		        numcp=$num1
-		        num1=$num2
-		        num2=$numcp
-                fi
+def is_prime(num):
+    if num < 2:
+        return False
+    for a in range(2, int(math.sqrt(num)) + 1):
+        if num % i == 0:
+            return False
+    return True
 
-        echo "$num$num1*$num2"
-}
+def main():
+    if len(sys.argv) != 2:
+        print("Usage: python factorize.py <file>")
+        return
 
-if [ $# -ne 1 ]
-then
-        echo 'Usage: rsa <file>'
-        exit 1
-else
+    file_path = sys.argv[1]
 
-        while read i
-        do
+    start_time = time.time()
+    try:
+        with open(file_path, 'r') as file:
+            number = int(file.readline().strip())
+        p = pollard_rho(number)
+        while not is_prime(p):
+            p = pollard_rho(p)
+        q = number // p
+        if p == number or q == number:
+            print(f"{number} is prime.")
+        else:
+            print(f"{number}={p}*{q}")
 
-                result=$(factor "$i")
-                check_factor $result
+        if time.time() - start_time > 5:
+            print("Time limit exceeded")
+            exit()
+    
+    except FileNotFoundError:
+        print(f"File '{file_path}' not found.")
 
-        done < "$1"
-fi
+
+if __name__ == '__main__':
+    main()
