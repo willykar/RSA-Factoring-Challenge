@@ -1,25 +1,21 @@
-#!/usr/bin/python3
+#/usr/bin/env python3
 import sys
 
-def factorize_number(n):
-    factors = []
-    for i in range(2, n // 2 + 1):
-        if n % i == 0:
-            factors.append((i, n // i))
-    return factors
 
-def factorize_file(file_path):
-    with open(file_path, 'r') as file:
-        numbers = file.read().splitlines()
-        for number in numbers:
-            number = int(number)
-            factor_pairs = factorize_number(number)
-            for pair in factor_pairs:
-                print(f"{number}={pair[0]}*{pair[1]}")
-
-if __name__ == "__main__":
-    if len(sys.argv) != 2:
-        print("Usage: python script.py <file>")
+def primef(m):
+    if m <= 3:
+        return int(m)
+    if m % 2 == 0:
+        return 2
+    elif m % 3 == 0:
+        return 3
     else:
-        file_path = sys.argv[1]
-        factorize_file(file_path)
+        for a in range(5, int((m)**0.5) + 1, 6):
+            if m % a == 0:
+                return int(a)
+            if m % (a + 2) == 0:
+                return primef(m/(a+2))
+    return int(m)
+
+
+print(primef(int(sys.argv[1])))
